@@ -1,0 +1,7 @@
+Extra Comments to augment the help sections for some datafilter functions and scripts
+
+numericgroupcombine
+out = numericgroupcombine(f, appendindex)
+This function is useful to call in scripts that are analyzing the results from a filterframework session.  It takes the output function f and combines the data from across animals to aid in doing statistics across multiple animals.
+
+

@@ -1,0 +1,24 @@
+function rundayprocess(animalname, daylist)
+% RUNDAYPROCESS(animalname, daylist)
+% runs the program dayprocess for animal on all days in daylist.
+% Must be run from within the animals rawdata directory.
+%
+% find cm/pixel for each track. create array with a cmpixpix value for each
+% epoch. example
+% cmpx_lin = [0.623 0.765 0.456 0.623 0.644 0.623 0.644 0.623];
+% cmpx_c = [0.623 0.456 0.765 0.623 0.644 0.623 0.644 0.623];
+% use cmpx_lin for days when linear track is first and cmpx_c when c-track is first
+% wdayprocess is a modification of dayprocess that take a vector of
+% different values for each epoch.
+
+
+clear cmperpix;
+animal = animaldef(animalname, 'outputstruct', 1);
+
+for day = daylist
+DAYDIRECT = [animal.name, '_0', num2str(day)]; % modify for days > 9
+cmperpix = loaddatastruct(animal.dir, animal.pre, 'cmperpix');
+dayprocess(DAYDIRECT, animal.dir, animal.pre, day, 'cmperpix', cmperpix{day}, 'diodepos', 1 );
+end
+
+

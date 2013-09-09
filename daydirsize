@@ -1,0 +1,11 @@
+# This section of code is useful for calling data directories that 
+# contain a leading zero for the day number.  Code taken from
+# lineardayprocess.m
+ 
+   dsz = '';
+   if (day < 10)
+      dsz = '0';
+   end
+
+   eval(['load ',directoryname,fileprefix,'task',dsz,num2str(day), '.mat']);
+

@@ -1,0 +1,16 @@
+For PowerPoint
+First export at .eps from Matlab
+In Windows 7
+right click on .eps file
+choose "Convert to Adobe PDF"
+save as .jpg
+insert into Powerpoint
+
+For editable Adobe Illustrator files
+all matlab figures with transparency must first be made opaque (convert back to transparency later in AI)
+save as .AI files
+open in AI
+remove clipping masks and ungroup
+select protions to be transparent and make transparent with 'Gradient' or 'Transparent' window box of tools
+resave as .AI
+now all text is editable, etc...

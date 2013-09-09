@@ -1,0 +1,10 @@
+% graphics_primer.m
+%
+% "Getting a handle on MATLAB graphics" by Roger A. Green 
+% July/August 2007 IEEE Potentials.
+%
+% distributed in NS248 class by Loren Frank
+%
+
+
+Read the 'line' and 'text' entries in Matlab help files.
