@@ -29,7 +29,7 @@ epochfilter{2} = ['(isequal($environment, ''lineartrack'')) & $exposure <= 5 & $
 % Time Filter
 %timefilter = { {'getlinstate', '(($traj ~= -1) & abs($velocity) <=1)', 2} };
 %timefilter = { {'getestpos', '$freezing == 1'} };
-timefilter{1} = {'getlinstate', '(($traj ~= -1) & abs($velocity) <=.1)', 6};
+timefilter{1} = {'getlinstate', '(($traj ~= -1) & abs($velocity) > -1)', 6};
 timefilter{2} = {['getestpos'] ['$freezing == ' num2str(freezeon)]};
 
 

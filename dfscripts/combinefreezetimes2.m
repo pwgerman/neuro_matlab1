@@ -7,7 +7,7 @@ function out = combinefreezetimes2(tmpfout)
 
 
 % display the freezing times as determined by exclude times
-disp('freeze times');
+% disp('freeze times');
 tfilter = 2; % the number of the time filter with freezing.  runriprate:timefilter{2}
 missedcount = 0;
 out = [];
@@ -35,7 +35,7 @@ for an = 1:length(tmpfout);
     end
 end
 out;
-disp(['missed = ' num2str(missedcount)]);
+%disp(['missed = ' num2str(missedcount)]);
 
 
 

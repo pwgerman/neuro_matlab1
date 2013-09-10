@@ -4,7 +4,7 @@
 
 
 timelimit = 10;
-renewcache = 0;
+renewcache = 1;
 if renewcache
     cout = cell(1,2);
     fout = cell(1,2);
@@ -32,8 +32,50 @@ for freeze = 1:2
         % display the freezing times as determined by exclude times
         cfrztimes{freeze}{shock} = combinefreezetimes2(fout{freeze}{shock});  
         compcout{freeze}{shock} = sortrows([cout{freeze}{shock}{1};cout{freeze}{shock}{2}]);
+        %removetestrows(within{freeze}{1}, 2, timelimit);
+        frzdiff = compcout{1}{1}-compcout{1}{2}; % difference in freezing (shock-control track)
     end
 end
+
+
+% calculate the freezing statistics using estpos values
+freezedays{2} = sortrows(compcout{1}{1}, 2);
+freezedays{2} = sortrows(compcout{1}{2}, 2);
+for d = 1:5
+mean(freezedays{1}((freezedays{1}(:,2)==d),7));
+mean(freezedays{2}((freezedays{2}(:,2)==d),7));
+end
+for d = 1:5
+sem(freezedays{1}((freezedays{1}(:,2)==d),7));
+sem(freezedays{2}((freezedays{2}(:,2)==d),7));
+end
+
+
+% plot the freezing cumsum over an epoch
+% tfilter is the cell index if multiple time filters in runriprate
+plotcumfreezing = 0;
+if plotcumfreezing
+    tfilter= 2
+    for freeze = 1
+        for shock = 2
+            for an = 1:5
+                for d = 1:5
+                    for e = 1:5
+                        try
+                            stairs((cumsum(fout{freeze}{shock}(an).timefilterresults{tfilter}{d}{e}(:,2)))/30);
+                            title(['animal ' num2str(an) '  day ' num2str(d) '  epoch ' num2str(e)']);
+                            pause
+                        catch
+                            ;
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+
 
 % test within animal difference of c-linear during non-freezing (ignore
 % shock v control. Each animal only has one condition of c-linear or
