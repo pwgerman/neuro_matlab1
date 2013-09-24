@@ -7,6 +7,6 @@ function out = sem(varargin)
 
 n = size(varargin{:},1);
 denom = sqrt(n-1);
-out = std(varargin{:})./denom;
+out = nanstd(varargin{:})./denom;
 
 end

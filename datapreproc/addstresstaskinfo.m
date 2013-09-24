@@ -46,6 +46,9 @@ for d = daylist
     addtaskinfo(animal.dir, animal.pre, [d], [8], 'type', 'sleep', 'environment', 'sleep', 'shock', 0);
     addtaskinfo(animal.dir, animal.pre, [d], [5], 'environment', 'wtrack', 'shock', 0);
     addtaskinfo(animal.dir, animal.pre, [d], [7], 'environment', 'wtrack', 'shock', 0);   
+    for e = 1:8
+        addtaskinfo(animal.dir, animal.pre, [d], [e], 'epoch', e);
+    end
 end
 
 
