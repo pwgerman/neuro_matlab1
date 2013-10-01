@@ -31,6 +31,8 @@ if length(index)==4
     trajdata = calclinfields(spikes, state, lindist, linpos, [index(1) index(2) index(3) index(4)]);
     [output] = twodoccupancy(spikes, state, linpos, pos, [index(1) index(2) index(3) index(4)]);
     drawfigure(fighandle, trajdata, output);
+    subplot(2,2,1); % align title
+    title([animal.name '  tet# ' num2str(index(3)) '  cell# ' num2str(index(4))]);
 elseif length(index)==2
     for tet = 1: size(spikes{index(1)}{index(2)}, 2)
         if ~isempty(spikes{index(1)}{index(2)}{tet})
@@ -40,7 +42,7 @@ elseif length(index)==2
                     [output] = twodoccupancy(spikes,state, linpos, pos, [index(1) index(2) tet cell]);
                     drawfigure(fighandle, trajdata, output);
                     subplot(2,2,1); % align title
-                    title(['tet# ' num2str(tet) '  cell# ' num2str(cell)]);
+                    title([animal.name '  tet# ' num2str(tet) '  cell# ' num2str(cell)]);
                     pause;
                 end
             end

@@ -1,28 +1,24 @@
 function handle = barsem( groupA, groupB )
+%handle = BARSEM( groupA, groupB )
 %BARSEM plots bar graph with SEM as error bars
-%   This is derived from matlab script fear_cond_errorbars.m
-%   created by Walter German on Aug 16, 2011
-%   groups A and B are two conditions (treatment and control)
-%   rows are repeated measures (ie each animal), columns are conditions (ie
-%   different days.
+%   (derived from matlab script fear_cond_errorbars.m)
+%
+%   groups A and B are two groups (ie treatment and control)
+%   rows are samples, columns are tested variables (ie
+%   different days).
 
-
-%load fear_cond
-shock = groupA;
-cntrl = groupB;
 
 figure;
 handle = gcf;
 
-h = bar([mean(cntrl); mean(shock)]');
+h = bar([mean(groupB); mean(groupA)]');
 hold;
 %errorbar([mean(cntrl); mean(shock)]',[std(cntrl); std(shock)]');
 
 xdata = get(h,'XData');
 sizz = size(xdata);
-b = [mean(cntrl); mean(shock)]';
-%errdata = [std(cntrl); std(shock)]';
-errdata = [sem(cntrl); sem(shock)]';
+b = [mean(groupB); mean(groupA)]';
+errdata = [sem(groupB); sem(groupA)]';
 
 NumGroups = sizz(1);
 SizeGroups = sizz(2);

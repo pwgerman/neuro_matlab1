@@ -90,10 +90,10 @@ for an = 1:length(f)
                                 tmptetcell{i}{e} = intersect(includetetcell{1}{e}, includetetcell{2}{e}, 'rows');
                                 includetetcell{i}{e} = tmptetcell{i}{e};
                             case 'firstonly'
-                                tmptetcell{i}{e} = includetetcell{1}{1}(~ismember(includetetcell{1}{1}, includetetcell{2}{1}, 'rows'), :)
+                                tmptetcell{i}{e} = includetetcell{1}{1}(~ismember(includetetcell{1}{1}, includetetcell{2}{1}, 'rows'), :);
                                 includetetcell{i}{e} = tmptetcell{i}{e};
                             case 'secondonly'
-                                tmptetcell{i}{e} = includetetcell{2}{1}(~ismember(includetetcell{2}{1}, includetetcell{1}{1}, 'rows'), :)
+                                tmptetcell{i}{e} = includetetcell{2}{1}(~ismember(includetetcell{2}{1}, includetetcell{1}{1}, 'rows'), :);
                                 includetetcell{i}{e} = tmptetcell{i}{e};
                             otherwise
                                 includetetcell{i}{e} = includetetcell{i}{e};

@@ -1,5 +1,5 @@
 % script to calc output of rungetripactivprob
-% display_rungetripactivprob_output.m
+% scatter_rungetripactivprob_output.m
 
 fout = [];
 bargroup = [];
@@ -18,6 +18,27 @@ for stage = 1:length(f)
     end
 end
 
+
+%rowindex = rowfind(fout{4}{2}(:,[1 2 4 5]), fout{4}{1}(:,[1 2 4 5]));
+
+for stage = 1:length(fout)
+    for g = 1:(length(fout{stage})-1)
+        for g2 = (g+1):length(fout{stage})
+            g2index = rowfind(fout{stage}{g}(:,[1 2 4 5]), fout{stage}{g2}(:,[1 2 4 5])); %index for g2 display
+            g2index = g2index(g2index>0);
+            gindex = rowfind(fout{stage}{g2}(:,[1 2 4 5]), fout{stage}{g}(:,[1 2 4 5])); % for g display
+            gindex = gindex(gindex>0);
+        %scatter(1:length(fout{1}{2}(:,6)), fout{1}{2}(:,6), [], fout{1}{2}(:,1), 'filled')
+            scatter(fout{stage}{g}(gindex,6), fout{stage}{g2}(g2index,6), [], fout{stage}{g}(gindex,1), 'filled');
+            title(['title day=' num2str(stage) '  group=' num2str(g)]);
+            xlabel(['group=' num2str(g)]);
+            ylabel(['group=' num2str(g2)]);
+            pause;
+        end
+    end
+end
+
+%{
 for stage = 1:length(f)
     numsampgroup = [];
     for i= 1:length(fout{stage})
@@ -60,24 +81,5 @@ for stage = 1:length(f)
         legend(gca, numsampgroup);
     end
 end
-
-% this bit will plot place fields, but currently gets tied up on
-% vectorfill.mex function for some epochs.  What about those epochs causes
-% the slow up?
-%{
-for i = 1:size(fout{1}{1},1)
-    switch fout{1}{1}(i,1) % animal#
-        case 1
-            plotrunepochs('Bukowski', fout{1}{1}(i,2:5))
-        case 2
-            plotrunepochs('Cummings', fout{1}{1}(i,2:5))
-        case 3
-            plotrunepochs('Dickinson', fout{1}{1}(i,2:5))
-        case 4
-            plotrunepochs('Eliot', fout{1}{1}(i,2:5))
-        case 5
-            plotrunepochs('Jigsaw', fout{1}{1}(i,2:5))
-    end
-    pause;
-end
 %}
+

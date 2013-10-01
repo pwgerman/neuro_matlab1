@@ -16,6 +16,19 @@ function addstresstaskinfo(animalname, daylist, cfirst, shockfirst)
 % addstresstaskinfo('Eliot', [1:5], 0, 1);
 % addstresstaskinfo('Jigsaw', 1:5, 1, 1);
 
+freezeMedianSplit{1} = [1	0	0	1	0];
+freezeMedianSplit{2} = [1	1	1	1	1];
+freezeMedianSplit{3} = [0	0	0	1	0];
+freezeMedianSplit{4} = [0	0	0	1	0];
+freezeMedianSplit{5} = [1	0	0	0	0];
+
+freezeAnimalSplit{1} = [1	0	0	1   0];
+freezeAnimalSplit{2} = [1	1	0	0   0];
+freezeAnimalSplit{3} = [1	0	0	1   0];
+freezeAnimalSplit{4} = [0	1	0	1   0];
+freezeAnimalSplit{5} = [1	1	0	0   0];
+
+
 animal = animaldef(animalname, 'outputstruct', 1);
 
 if (cfirst & shockfirst) | (~cfirst & ~shockfirst)
@@ -31,7 +44,6 @@ addtaskinfo(animal.dir, animal.pre, daylist,[3],'exposure',daylist,'exposureday'
 addtaskinfo(animal.dir, animal.pre, daylist,[5 7],'exposure', 1:length(daylist)*2 ,'exposureday',daylist); % wtrack
 addtaskinfo(animal.dir, animal.pre, daylist,[1 4 6 8],'exposure', 1:length(daylist)*4 ,'exposureday',daylist); % sleep
 
-
 for d = daylist
     if (isodd(d) & cfirst) | (~isodd(d) & ~cfirst) % c-track first
         addtaskinfo(animal.dir, animal.pre, [d], [2], 'environment', 'ctrack', 'shock', cshock); 
@@ -45,11 +57,33 @@ for d = daylist
     addtaskinfo(animal.dir, animal.pre, [d], [6], 'type', 'sleep', 'environment', 'sleep', 'shock', 0);
     addtaskinfo(animal.dir, animal.pre, [d], [8], 'type', 'sleep', 'environment', 'sleep', 'shock', 0);
     addtaskinfo(animal.dir, animal.pre, [d], [5], 'environment', 'wtrack', 'shock', 0);
-    addtaskinfo(animal.dir, animal.pre, [d], [7], 'environment', 'wtrack', 'shock', 0);   
+    addtaskinfo(animal.dir, animal.pre, [d], [7], 'environment', 'wtrack', 'shock', 0);
     for e = 1:8
-        addtaskinfo(animal.dir, animal.pre, [d], [e], 'epoch', e);
+        addtaskinfo(animal.dir, animal.pre, [d], [e], 'epoch', e);     
     end
 end
+
+%{
+for d = daylist
+    switch animal.name
+        case 'bukowski'
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeMedianSplit', freezeMedianSplit{1}(d));
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeAnimalSplit', freezeAnimalSplit{1}(d));
+        case 'Cummings'
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeMedianSplit', freezeMedianSplit{2}(d));
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeAnimalSplit', freezeAnimalSplit{2}(d));
+        case 'Dickinson'
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeMedianSplit', freezeMedianSplit{3}(d));
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeAnimalSplit', freezeAnimalSplit{3}(d));
+        case 'Eliot'
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeMedianSplit', freezeMedianSplit{4}(d));
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeAnimalSplit', freezeAnimalSplit{4}(d));
+        case 'Jigsaw'
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeMedianSplit', freezeMedianSplit{5}(d));
+            addtaskinfo(animal.dir, animal.pre, d, 1:8, 'freezeAnimalSplit', freezeAnimalSplit{5}(d));
+    end
+end
+%}
 
 
 
