@@ -37,9 +37,13 @@ elseif length(index)==2
     for tet = 1: size(spikes{index(1)}{index(2)}, 2)
         if ~isempty(spikes{index(1)}{index(2)}{tet})
             for cell = 1: size(spikes{index(1)}{index(2)}{tet}, 2)
-                if ~isempty(spikes{index(1)}{index(2)}{tet}{cell})
+                if ~isempty(spikes{index(1)}{index(2)}{tet}{cell}) % ~isempty(spikes{index(1)}{index(2)}{tet}{cell}.data)
                     trajdata = calclinfields(spikes, state, lindist, linpos, [index(1) index(2) tet cell]);
-                    [output] = twodoccupancy(spikes,state, linpos, pos, [index(1) index(2) tet cell]);
+                    try  % ~isempty(spikes{index(1)}{index(2)}{tet}{cell}.data)
+                        [output] = twodoccupancy(spikes,state, linpos, pos, [index(1) index(2) tet cell]);
+                    catch
+                        continue
+                    end
                     drawfigure(fighandle, trajdata, output);
                     subplot(2,2,1); % align title
                     title([animal.name '  tet# ' num2str(tet) '  cell# ' num2str(cell)]);
@@ -54,6 +58,7 @@ end
 function drawfigure(fighandle, trajdata, output)
 % plot the trajdata linearized firing rates and the twodoccupancy pictures
 figure(fighandle);
+set(gcf, 'Color', [1 1 1]); % set grey bg to white
 
 subplot(2,2,1); plot(trajdata{1}(:,5)); % smoothed occupancy normalized linear firing rates
 try
