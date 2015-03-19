@@ -20,7 +20,15 @@ end
 
 
 %rowindex = rowfind(fout{4}{2}(:,[1 2 4 5]), fout{4}{1}(:,[1 2 4 5]));
+%setlist = [{'firstonly'}, {'secondonly'}, {'intersect'}]; %
+setlist = [{'shock only'}, {'control only'}, {'intersect'}]; %
+%grouplist = [{'shock'}, {'control'},{'sleep1'},{'sleep2'}];
+grouplist = [{'sleep1'}, {'run1'},{'run2'},{'sleep2'}];
 
+figure;
+set(gcf, 'Color', [1 1 1]);
+hold on;
+count =1;
 for stage = 1:length(fout)
     for g = 1:(length(fout{stage})-1)
         for g2 = (g+1):length(fout{stage})
@@ -28,15 +36,30 @@ for stage = 1:length(fout)
             g2index = g2index(g2index>0);
             gindex = rowfind(fout{stage}{g2}(:,[1 2 4 5]), fout{stage}{g}(:,[1 2 4 5])); % for g display
             gindex = gindex(gindex>0);
-        %scatter(1:length(fout{1}{2}(:,6)), fout{1}{2}(:,6), [], fout{1}{2}(:,1), 'filled')
-            scatter(fout{stage}{g}(gindex,6), fout{stage}{g2}(g2index,6), [], fout{stage}{g}(gindex,1), 'filled');
-            title(['title day=' num2str(stage) '  group=' num2str(g)]);
-            xlabel(['group=' num2str(g)]);
-            ylabel(['group=' num2str(g2)]);
-            pause;
+            %scatter(1:length(fout{1}{2}(:,6)), fout{1}{2}(:,6), [], fout{1}{2}(:,1), 'filled')
+            subplot(length(fout),6, count);
+            hold on;
+            %scatter(fout{stage}{g}(gindex,6), fout{stage}{g2}(g2index,6), [], fout{stage}{g}(gindex,1), 'filled');
+            if count == 1         
+                gscatter(fout{stage}{g}(gindex,6), fout{stage}{g2}(g2index,6), fout{stage}{g}(gindex,1));
+            else
+                gscatter(fout{stage}{g}(gindex,6), fout{stage}{g2}(g2index,6), fout{stage}{g}(gindex,1),[],[],[],'off');
+            end
+            xlabel([grouplist{g}]);
+            ylabel([grouplist{g2}]);
+            axisMax = .4;
+            axis([0 axisMax 0 axisMax]);
+            plot([0 axisMax], [0 axisMax], ':k');
+            %pause;
+            count = count+1;
         end
     end
+    subplot(length(fout),6, count-6); 
+    title(['Place Field in ', setlist{stage}]);
 end
+%subplot(length(fout),6, 1); 
+%legend(['Buk', 'Cum', 'Dic', 'Eli', 'Jig']);
+
 
 %{
 for stage = 1:length(f)

@@ -8,6 +8,7 @@ function out = indexlinfields(animalname, index)
 % currently set to only work on linear tracks with two trajectories
 % called by script scatter_rungetripactivprob_multiday_stats
 
+binsize = 2; % each bin is 2 cm.
 
 % translate numbers to animal names
 if isnumeric(animalname)
@@ -45,11 +46,13 @@ for i= 1 : size(index,1)
         lpf = r.trajdata{s}(:,5); %linear place field
         lpf(isnan(lpf))= 0; % make NaN into zero
         mu = mean(lpf);
-        %pfsize(s) = sum((lpf-mu) > 0);
-        pfsize(s) = sum(lpf((lpf-mu) > 0));
+        thresh = 2*std(lpf);
+        pfsize(s) = binsize*(sum((lpf-thresh) > 0));
+        %pfsize(s) = sum(lpf((lpf-mu) > 0)); % integrated PF size
     end
     imax(i) = max(ymax);
-    ipfsize(i) = sum(pfsize); % add place fields in both directions together
+    ipfsize(i) = nanmean(pfsize); % add place fields in both directions together
 end
-%out = imax;
-out = ipfsize;
+out = imax;
+%mean(ipfsize)
+%out = ipfsize;

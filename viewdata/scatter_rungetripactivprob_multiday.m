@@ -43,6 +43,11 @@ count =1;
 for stage = 1:length(mfout)
     for g = 1:(length(mfout{stage})-1)
         for g2 = (g+1):length(mfout{stage})
+            if  isempty(mfout{stage}{g})
+                mfout{stage}{g} = zeros(1,6);
+            elseif isempty(mfout{stage}{g2})
+                mfout{stage}{g2} = zeros(1,6);               
+            end
             g2index = rowfind(mfout{stage}{g}(:,[1 2 4 5]), mfout{stage}{g2}(:,[1 2 4 5])); %index for g2 display
             g2index = g2index(g2index>0);
             gindex = rowfind(mfout{stage}{g2}(:,[1 2 4 5]), mfout{stage}{g}(:,[1 2 4 5])); % for g display
@@ -81,3 +86,10 @@ for stage = 1:length(mfout)
     title(['Place Field in ', setlist{stage}]);
 end
 
+% save file info
+%picpre = 'freezetimes_estpos';
+savedir = '/home/walter/Desktop/sfn2013-images/';
+filenameout = 'scatter1'; %[picpre, num2str(picind)];
+% save output for adobe illustrator
+print('-depsc','-r300',[savedir,filenameout,'.ai']);
+print('-djpeg','-r300',[savedir,filenameout,'.jpg']);

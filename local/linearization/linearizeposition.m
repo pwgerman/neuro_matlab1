@@ -26,7 +26,7 @@
 %
 %		     'validtransitions' - if specified, this is a Nx2 list of segments that
 %		     	define the valid transitions from one segment to the next.
-
+%
 %                    'welldist' - to decide whether or not the animal
 %                    completed the trajectory, the program needs a radius
 %                    around the endpoint of each trajectory which the

@@ -12,21 +12,13 @@ function addstresstaskinfo(animalname, daylist, cfirst, shockfirst)
 % Examples: 
 % addstresstaskinfo('Bukowski', [1:8], 1, 0);
 % addstresstaskinfo('Cummings', [1:10], 0, 0);
-% addstresstaskinfo('Dickinson', [1:3], 1, 1);
+% addstresstaskinfo('Dickinson', [1:4], 1, 1); % use special createstresstask_dic4 for day 4
 % addstresstaskinfo('Eliot', [1:5], 0, 1);
 % addstresstaskinfo('Jigsaw', 1:5, 1, 1);
-
-freezeMedianSplit{1} = [1	0	0	1	0];
-freezeMedianSplit{2} = [1	1	1	1	1];
-freezeMedianSplit{3} = [0	0	0	1	0];
-freezeMedianSplit{4} = [0	0	0	1	0];
-freezeMedianSplit{5} = [1	0	0	0	0];
-
-freezeAnimalSplit{1} = [1	0	0	1   0];
-freezeAnimalSplit{2} = [1	1	0	0   0];
-freezeAnimalSplit{3} = [1	0	0	1   0];
-freezeAnimalSplit{4} = [0	1	0	1   0];
-freezeAnimalSplit{5} = [1	1	0	0   0];
+%
+% based on these parameters additional values added include:
+%       exposure, exposureday, enviroment ('sleep', 'wtrack', 'ctrack' or
+%       'lineartrack'), shock (0 or 1), epoch, dayshockfirst, daycfirst
 
 
 animal = animaldef(animalname, 'outputstruct', 1);
@@ -45,25 +37,51 @@ addtaskinfo(animal.dir, animal.pre, daylist,[5 7],'exposure', 1:length(daylist)*
 addtaskinfo(animal.dir, animal.pre, daylist,[1 4 6 8],'exposure', 1:length(daylist)*4 ,'exposureday',daylist); % sleep
 
 for d = daylist
-    if (isodd(d) & cfirst) | (~isodd(d) & ~cfirst) % c-track first
-        addtaskinfo(animal.dir, animal.pre, [d], [2], 'environment', 'ctrack', 'shock', cshock); 
-        addtaskinfo(animal.dir, animal.pre, [d], [3], 'environment', 'lineartrack', 'shock', ~cshock); 
+    if (isodd(d) & cfirst) | (~isodd(d) & ~cfirst); % c-track first
+        addtaskinfo(animal.dir, animal.pre, [d], [2], 'environment', 'ctrack', 'shock', cshock, 'control', ~cshock); 
+        addtaskinfo(animal.dir, animal.pre, [d], [3], 'environment', 'lineartrack', 'shock', ~cshock, 'control', cshock); 
     else % c-track second
-        addtaskinfo(animal.dir, animal.pre, [d], [2], 'environment', 'lineartrack', 'shock', ~cshock); 
-        addtaskinfo(animal.dir, animal.pre, [d], [3], 'environment', 'ctrack', 'shock', cshock); 
+        addtaskinfo(animal.dir, animal.pre, [d], [2], 'environment', 'lineartrack', 'shock', ~cshock, 'control', cshock); 
+        addtaskinfo(animal.dir, animal.pre, [d], [3], 'environment', 'ctrack', 'shock', cshock, 'control', ~cshock); 
     end
-    addtaskinfo(animal.dir, animal.pre, [d], [1], 'type', 'sleep', 'environment', 'sleep', 'shock', 0);
-    addtaskinfo(animal.dir, animal.pre, [d], [4], 'type', 'sleep', 'environment', 'sleep', 'shock', 0);
-    addtaskinfo(animal.dir, animal.pre, [d], [6], 'type', 'sleep', 'environment', 'sleep', 'shock', 0);
-    addtaskinfo(animal.dir, animal.pre, [d], [8], 'type', 'sleep', 'environment', 'sleep', 'shock', 0);
-    addtaskinfo(animal.dir, animal.pre, [d], [5], 'environment', 'wtrack', 'shock', 0);
-    addtaskinfo(animal.dir, animal.pre, [d], [7], 'environment', 'wtrack', 'shock', 0);
+    addtaskinfo(animal.dir, animal.pre, [d], [1], 'type', 'sleep', 'environment', 'sleep', 'shock', 0, 'control', 0);
+    addtaskinfo(animal.dir, animal.pre, [d], [4], 'type', 'sleep', 'environment', 'sleep', 'shock', 0, 'control', 0);
+    addtaskinfo(animal.dir, animal.pre, [d], [6], 'type', 'sleep', 'environment', 'sleep', 'shock', 0, 'control', 0);
+    addtaskinfo(animal.dir, animal.pre, [d], [8], 'type', 'sleep', 'environment', 'sleep', 'shock', 0, 'control', 0);
+    addtaskinfo(animal.dir, animal.pre, [d], [5], 'environment', 'wtrack', 'shock', 0, 'control', 0);
+    addtaskinfo(animal.dir, animal.pre, [d], [7], 'environment', 'wtrack', 'shock', 0, 'control', 0);
+    
     for e = 1:8
-        addtaskinfo(animal.dir, animal.pre, [d], [e], 'epoch', e);     
+        addtaskinfo(animal.dir, animal.pre, [d], [e], 'epoch', e);       
+        if (isodd(d) & shockfirst) | (~isodd(d) & ~shockfirst);
+            addtaskinfo(animal.dir, animal.pre, [d], [e], 'dayshockfirst', 1);
+        else %shock in epoch2 on day=2,4,...
+            addtaskinfo(animal.dir, animal.pre, [d], [e], 'dayshockfirst', 0);
+        end
+        if (isodd(d) & cfirst) | (~isodd(d) & ~cfirst);
+            addtaskinfo(animal.dir, animal.pre, [d], [e], 'daycfirst', 1);
+        else % c-track in epoch2 on day=2,4,...
+            addtaskinfo(animal.dir, animal.pre, [d], [e], 'daycfirst', 0);
+        end
+        %addtaskinfo(animal.dir, animal.pre, [d], [e], 'cfirst', cfirst);
+        %addtaskinfo(animal.dir, animal.pre, [d], [e], 'shockfirst', shockfirst);
     end
 end
 
+
 %{
+freezeMedianSplit{1} = [1	0	0	1	0];
+freezeMedianSplit{2} = [1	1	1	1	1];
+freezeMedianSplit{3} = [0	0	0	1	0];
+freezeMedianSplit{4} = [0	0	0	1	0];
+freezeMedianSplit{5} = [1	0	0	0	0];
+
+freezeAnimalSplit{1} = [1	0	0	1   0];
+freezeAnimalSplit{2} = [1	1	0	0   0];
+freezeAnimalSplit{3} = [1	0	0	1   0];
+freezeAnimalSplit{4} = [0	1	0	1   0];
+freezeAnimalSplit{5} = [1	1	0	0   0];
+
 for d = daylist
     switch animal.name
         case 'bukowski'

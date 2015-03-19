@@ -5,7 +5,8 @@ function out = sem(varargin)
 %   see std() and var() for info on code and args
 %   written by Walter German Aug 16, 2011
 
-n = size(varargin{:},1);
+
+n = max(size(varargin{:}));
 denom = sqrt(n-1);
 out = nanstd(varargin{:})./denom;
 

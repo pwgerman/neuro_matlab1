@@ -8,16 +8,16 @@ function handle = barsem( groupA, groupB )
 %   different days).
 
 
-figure;
-handle = gcf;
+%figure;
+%handle = gcf;
 
-h = bar([mean(groupB); mean(groupA)]');
+h = bar([nanmean(groupB); nanmean(groupA)]');
 hold;
 %errorbar([mean(cntrl); mean(shock)]',[std(cntrl); std(shock)]');
 
 xdata = get(h,'XData');
 sizz = size(xdata);
-b = [mean(groupB); mean(groupA)]';
+b = [nanmean(groupB); nanmean(groupA)]';
 errdata = [sem(groupB); sem(groupA)]';
 
 NumGroups = sizz(1);
@@ -29,7 +29,11 @@ NumBars = SizeGroups * NumGroups;
 xb = [];
 
 for i = 1:SizeGroups
+    try
 xb = [xb; xdata{i}];
+    catch
+        xb = [xdata];
+    end
 end
 
 centerX = xb(1,:)-.15;

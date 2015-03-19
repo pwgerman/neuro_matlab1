@@ -34,4 +34,4 @@ set(0,'DefaultLineLineWidth',3);
 set(0,'DefaultAxesFontSize',18);
 set(0,'DefaultTextFontSize',24);
 
-get(0, 'default')  % confirm new settings
+get(0, 'default');  % confirm new settings by removing semicolon to display

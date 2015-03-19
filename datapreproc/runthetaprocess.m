@@ -38,7 +38,7 @@ daytetlist = [daylist; tetlisttmp]';
 
 animalname = 'Jigsaw';
 days = [1:5];
-daytetlist = [1:5; ones(1,5)*12]'; % Jigsaw REF=[2 5 12 13 20]
+daytetlist = [1:5; ones(1,5)*20]'; % Jigsaw REF=[2 5 12 13 20]
 
 animal = animaldef(animalname, 'outputstruct', 1);
 %thetadayprocess(animal.dir, animal.pre ,days);

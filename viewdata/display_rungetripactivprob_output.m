@@ -4,6 +4,7 @@
 fout = [];
 bargroup = [];
 
+% does this replicat the functionality of structure_group_combine ??
 for stage = 1:length(f)
     for an = 1:length(f{stage})
         for g = 1:length(f{stage}(an).output)
@@ -18,6 +19,8 @@ for stage = 1:length(f)
     end
 end
 
+figure;
+hold on;
 for stage = 1:length(f)
     numsampgroup = [];
     for i= 1:length(fout{stage})
@@ -51,8 +54,9 @@ for stage = 1:length(f)
             bargroup{i} = fout{stage}{i}(:,6);
             bargroup{i} = bargroup{i}(~isnan(bargroup{i})); % remove NaN
         end
-        [handle, hb] = barsem2(bargroup);
+        subplot(2,2,stage);
         
+        [handle, hb] = barsem2(bargroup);
         title(['Reactivation of PF cells in Stress Tracks: day=', num2str(fout{stage}{1}(1,2)) ' ANOVA p= ' num2str(p,1)]);
         ylabel('cell reactiv prob');
         %set(gca,'XTickLabel',{'RipShk,PFShk', 'RipCtrl,PFShk', 'RipShk,PFCtrl', 'RipCtrl,PFCtrl'})

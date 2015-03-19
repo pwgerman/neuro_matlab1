@@ -80,12 +80,43 @@ sleep2= mfout{3}{4}(:,6); % sleep 2, noPF
 shock= mfout{1}{2}(:,6); % 
 ctrl= mfout{2}{3}(:,6); % 
 p = ranksum(rmnan(shock),rmnan(ctrl))
+size(shock) 
+size(ctrl)
 %[h,p] = ttest2(shock, ctrl);
-
 shock= mfout{1}{4}(:,6); % 
 ctrl= mfout{2}{4}(:,6); % 
 p = ranksum(rmnan(shock),rmnan(ctrl))
+size(shock) 
+size(ctrl)
 %}
+
+%% shock v ctrl when only  looking at 2 run epochs (ie freezing)
+shock= mfout{1}{1}(:,6); % 
+ctrl= mfout{2}{1}(:,6); % 
+p = ranksum(rmnan(shock),rmnan(ctrl))
+size(shock)
+nanmean(shock)
+size(ctrl)
+nanmean(ctrl)
+%[h,p] = ttest2(shock, ctrl);
+
+%% 
+shock= mfout{1}{2}(:,6); % 
+ctrl= mfout{2}{2}(:,6); % 
+p = ranksum(rmnan(shock),rmnan(ctrl))
+size(shock) 
+nanmean(shock)
+size(ctrl)
+nanmean(ctrl)
+%%
+shock= mfout{3}{1}(:,6); % 
+ctrl= mfout{3}{2}(:,6); % 
+p = ranksum(rmnan(shock),rmnan(ctrl))
+size(shock) 
+nanmean(shock)
+size(ctrl)
+nanmean(ctrl)
+%%
 
 %{
 sleep2PFshock = mfout{1}{4}(:,6);
@@ -94,7 +125,7 @@ p = ranksum(sleep2PFshock, sleep2PFctrl);
 %[h,p] = ttest2(sleep2PFshock, sleep2PFctrl);
 %}
 
-%
+%{
 % create vertical line plots of variables (not 2d scatter)
 var1 = mfout{1}{3}(:,6); % stage (firstonly), group(epoch)
 %var1c = mfout{2}{1}(:,1);
@@ -104,7 +135,7 @@ var2 = mfout{2}{3}(:,6);
 %var2c = mfout{2}{2}(:,1);
 %gscatter(2*ones(length(var2),1), var2, var2c,[],[],[],'off');
 p = ranksum(rmnan(var1), rmnan(var2))
-%
+%}
 
 %{
 % plot linear place fields of a select group

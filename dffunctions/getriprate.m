@@ -7,6 +7,9 @@ function [out] = getriprate(index, excludeperiods, ripples, varargin)
 %   options are
 %	'minenergy', E
 %		     specifies the minimum energy of a valid ripple event
+%	'minthresh', minthresh 
+%		     specifies a minimum threshold in stdev units for a valid 
+%			ripple event  (default 0)
 %   'numtetrodes'
 %           specifies number of tetrodes a ripple must be recorded on to be
 %           included in analysis, default 1
@@ -17,13 +20,15 @@ function [out] = getriprate(index, excludeperiods, ripples, varargin)
 %           set to 1 to append the cell index to the output [day epoch
 %           value]
 %
-%   out is [rate proportiontime]
+%   out is [riprate proportiontime includetime]
 %       proprotiontime is proportion of included time during which ripples
 %   were recorded
-%       rate is number ripples/sec during included time
+%       riprate is number ripples/sec during included time
+%       includedtime is total time included in analysis in seconds
 
 % assign the options
 numtetrodes = 1;
+minthresh = 0;
 minenergy = 0;
 proptetrodes = [];
 appendindex = 0;
@@ -31,6 +36,8 @@ for option = 1:2:length(varargin)-1
     switch varargin{option}
         case 'numtetrodes'
             numtetrodes = varargin{option+1};
+        case 'minthresh'
+            minthresh = varargin{option+1};
         case 'proptetrodes'
             proptetrodes = varargin{option+1};
         case 'appendindex'
@@ -53,14 +60,15 @@ times = r.timerange(1):0.001:r.timerange(end);
 nrip = zeros(size(times));
 for t = 1:length(tetlist)
     tmprip = ripples{index(1,1)}{index(1,2)}{tetlist(t)};
-    if (minenergy == 0)
-        % get all the times
-        rtimes = [tmprip.starttime tmprip.endtime];
-    else
-        % get the indeces for the ripples with energy above minenergy
-        rvalid = find(tmprip.energy > minenergy);
-        rtimes = [tmprip.starttime(rvalid) tmprip.endtime(rvalid)];
-    end
+    
+    % get the indeces for the ripples with energy above minenergy
+    %   and ripples with threshold above minthresh
+    rvalide = find(tmprip.energy > minenergy);
+    rvalidth = find(tmprip.maxthresh > minthresh);
+    rvalid = intersect(rvalide, rvalidth);
+    
+    rtimes = [tmprip.starttime(rvalid) tmprip.endtime(rvalid)];
+    
     % create another parallel vector with bordering times for zeros
     nrtimes = [(rtimes(:,1) - 0.00001) (rtimes(:,2) + 0.00001)];
     rtimes = reshape(rtimes', length(rtimes(:)), 1);
@@ -87,7 +95,7 @@ rip.nripples = nrip; %number of ripples on each tetrode
 if appendindex == 0
     out = calcriprate(rip, excludeperiods, numtetrodes);
 elseif appendindex ==1
-    tmpout = calcriprate(rip, excludeperiods, numtetrodes);
+    tmpout = calcriprate(rip, excludeperiods, numtetrodes); %[riprate rippercenttime includetime]
     out = [index(size(tmpout,1),:) tmpout];
 end
 

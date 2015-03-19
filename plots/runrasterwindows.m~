@@ -1,0 +1,108 @@
+
+%{
+animal = animaldef('Eliot', 'outputstruct', 1);
+spikes = loaddatastruct(animal.dir, animal.pre, 'spikes');
+cellinfo = loaddatastruct(animal.dir, animal.pre, 'cellinfo');
+
+%h = plotrasters(animal.dir, animal.name, celllist, times);
+%}
+
+%% create filter
+
+% Animal Selection
+animals = {'Bukowski', 'Cummings', 'Dickinson', 'Eliot', 'Jigsaw'};
+%animals = { 'Eliot'};
+days = 3:4;
+minnumspikes = 1;
+
+% Epoch Filter
+%epochfilter = ['$shock == 1 & ismember($exposureday, [' num2str(days) '])'];
+%epochfilter = ['(isequal($environment, ''lineartrack'') | isequal($environment, ''ctrack'') ) & $shock == 0 & ismember($exposureday, [' num2str(days) '])' ];
+epochfilter = ['$control == 1 & ismember($exposureday, [' num2str(days) '])'];
+
+
+% Time Filter
+%timefilter = { {'getlinstate', '(($traj ~= -1) & abs($velocity) >=0)', 6} };
+timefilter = { {'get2dstate', ['((abs($velocity) <= 2))'] } }; % works for run and sleep epochs BASELINE
+
+% Cell Pair Filter
+%cellpairfilter = {'difftet','(isequal($area, ''CA1''))', '(isequal($area, ''CA1''))'};
+
+% cellfilter for reactivated cells in ripple epoch
+cellfilter =['(isequal($area, ''CA1'') | isequal($area, ''CA3'') )'];
+
+% riptetfilter is an arg for getripactivprob call to gettetmaxcell
+riptetfilter =  '(isequal($area, ''CA1'')) '; 
+
+iterator = 'singlecellanal';
+
+% create filter for ripple/reactivation epoch
+f = createfilter('animal',animals,'epochs',epochfilter,...
+    'cells',cellfilter,'excludetimefilter', timefilter,...
+    'iterator', iterator);  % for singlecellanal and cellfilter
+
+% for multicellanal and cellpairfilter
+%{
+% Iterator
+iterator = 'multicellanal';
+% Filter Creation
+f = createfilter('animal', animals, 'epochs', epochfilter,...
+    'cellpairs', cellpairfilter, 'excludetime', timefilter,...
+    'iterator', iterator);  
+%}
+
+
+f = setfilterfunction(f, 'getrasterwindows', {'ripples','task','cellinfo'} , riptetfilter, 'appendindex', 1);%
+
+%% run filter
+f = runfilter(f);
+
+f = gettetrodelist(f, cellfilter, 2, 'maxcell', 1);
+% tet = gettetmaxcell(cellinfo, task, index(1,1), cellfilter, 2);
+% 
+iterator = 'singleepochanal';
+f = extendfilter(f, 'keepoutput', 'outputtet', 'iterator', iterator);
+f = setfilterfunction(f, 'getfreezerasterwindows', {'estpos','task','cellinfo'} , riptetfilter, 'appendindex', 1);%
+f = runfilter(f);
+
+%% plot rasters
+%animal = animaldef('Eliot', 'outputstruct', 1);
+
+%% for each epoch get all raster rows
+for an = 1:size(f,2) % test with only one animal
+    for ee = 1:size(f(an).epochs{1},1)
+        animal = animaldef(f(an).animal{1}, 'outputstruct',1);
+        tet = f(an).data{1}{ee};
+        tlist = [f(an).epochs{1}(ee,:) tet]; % tetrode index [day epoch tetrode-with-best-ripples]
+        times = f(an).output{1}(ee).times{1};    % times are windows for freezing episodes
+        if ~isempty(times)
+            scoord = plotrasters(animal.dir, animal.pre, tlist, times, 'datatype', 'ripples', 'colorstr', 'c');
+            scoord = plotrasterstate(animal.dir, animal.pre, tlist, times, 'datatype', 'estpos', 'colorstr', 'r');
+        end
+        title(['animal ', animal.name, '  ', num2str(tlist)]);
+        keyboard;
+        cla;
+    end
+end
+
+% original code that worked with day 4 Eliot only
+%{
+%% for each cell get all raster rows
+for ii = 1:size(f.data{1}{1},1)
+    ii;
+    clist = [f.epochs{1} f.data{1}{1}(ii,:)]; % cell index [day epoch tetrode cell]
+    tet = f.output1{1}(1).tet;
+    tlist = [f.epochs{1} tet]; % tetrode index [day epoch tetrode-with-best-ripples]
+ 
+    times = f.output{1}(1).times{1};    % times are windows for freezing episodes
+    
+    scoord = plotrasters(animal.dir, animal.pre, clist, times, 'datatype', 'spikes', 'colorstr', 'k'); % h = ... nargout to check if return or not in plotrasters
+    scoord = plotrasters(animal.dir, animal.pre, tlist, times, 'datatype', 'ripples', 'colorstr', 'c');
+    scoord = plotrasterstate(animal.dir, animal.pre, tlist, times, 'datatype', 'estpos', 'colorstr', 'r');
+    title(['animal ', animal.name, '  ', num2str(clist)]);
+    keyboard;
+    cla;
+end
+%}
+
+

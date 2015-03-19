@@ -45,6 +45,7 @@ elseif length(index)==2
                         continue
                     end
                     drawfigure(fighandle, trajdata, output);
+                    axis off; % remove axis and tick marks
                     subplot(2,2,1); % align title
                     title([animal.name '  tet# ' num2str(tet) '  cell# ' num2str(cell)]);
                     pause;
@@ -59,6 +60,11 @@ function drawfigure(fighandle, trajdata, output)
 % plot the trajdata linearized firing rates and the twodoccupancy pictures
 figure(fighandle);
 set(gcf, 'Color', [1 1 1]); % set grey bg to white
+colormaptmp = colormap;
+colormaptmp(1,:) = [1 1 1];
+colormap(colormaptmp);
+
+%imagesc([1024:-1:1]') % use to plot colormap legend
 
 subplot(2,2,1); plot(trajdata{1}(:,5)); % smoothed occupancy normalized linear firing rates
 try
@@ -86,4 +92,4 @@ subplot(1,1,1); plot(pos{index(1)}{index(2)}.data(:,2), pos{index(1)}{index(2)}.
 hold on; plot(spikes{index(1)}{index(2)}{index(3)}{index(4)}.data(:,2), spikes{index(1)}{index(2)}{index(3)}{index(4)}.data(:,3), 'rx')
 %}
 
-
+%print('-djpeg','-r300',[savedir,filenameout,'.jpg']);

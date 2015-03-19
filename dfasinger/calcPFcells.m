@@ -27,9 +27,12 @@ end
 
 
 allrunPKgroup = getpeakratesallrun(minV, animals, epochfilter, varargin);%Bar, Dwi, Cal
-if lessthan == 0
-    PFcells = allrunPKgroup{1}(allrunPKgroup{1}(:,6)>=minPeak, 1:5);
-elseif lessthan == 1
-    PFcells = allrunPKgroup{1}(allrunPKgroup{1}(:,6)<minPeak, 1:5);
-end
+if ~isempty(allrunPKgroup)
+    if lessthan == 0
+        PFcells = allrunPKgroup{1}(allrunPKgroup{1}(:,6)>=minPeak, 1:5);
+    elseif lessthan == 1
+        PFcells = allrunPKgroup{1}(allrunPKgroup{1}(:,6)<minPeak, 1:5);
+    end
+else % if allrunPKgroup empty
+    PFcells = [];
 end
